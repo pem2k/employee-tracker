@@ -10,4 +10,11 @@ VALUES ("researcher", 100000.50, 1),
        
 
 INSERT INTO employee (first_name, last_name, manager_id)
-VALUES ("John M", "Anager", null) 
+VALUES ("John M", "Anager", null), 
+       ("Julie D", "Boss", null),
+       ("Todd", "Di'rector", null);
+
+INSERT INTO employee (first_name, last_name, manager_id)
+VALUES ("Devin", "Elepor", 1),
+       ("Ne", "Te-work", 2),
+       ("Jerry", "From Acccounting",3)
