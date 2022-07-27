@@ -8,13 +8,12 @@ VALUES ("researcher", 100000.50, 1),
        ("admin", 120000, 3),
        ("accountant", 70000, 2);
        
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("John M", "Anager", 1, null), 
+       ("Julie D", "Boss", 2, null),
+       ("Todd", "Di'rector", 3, null);
 
-INSERT INTO employee (first_name, last_name, manager_id)
-VALUES ("John M", "Anager", null), 
-       ("Julie D", "Boss", null),
-       ("Todd", "Di'rector", null);
-
-INSERT INTO employee (first_name, last_name, manager_id)
-VALUES ("Devin", "Elepor", 1),
-       ("Ne", "Te-work", 2),
-       ("Jerry", "From Acccounting",3)
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Devin", "Elepor", 1, 1),
+       ("Ne", "Te-work", 2, 2),
+       ("Jerry", "From Acccounting", 3, 3);
