@@ -14,6 +14,7 @@ const db = mysql.createConnection(
     console.log(`Connected to the company_db database.`)
 );
 
+//runs queries based on user input
 const init = async () => {
     try {
         const res = await inquirer.prompt([
@@ -31,8 +32,8 @@ const init = async () => {
         else if (res.startQ == initArr[3]) { addDepts() }
         else if (res.startQ == initArr[4]) { addRoles() }
         else if (res.startQ == initArr[5]) { addEmps() }
-        else if (res.startQ == initArr[6]){ updateEmps() }
-        else{process.exit(0)}
+        else if (res.startQ == initArr[6]) { empInqBuild() }
+        else { process.exit(0) }
     } catch (err) {
         console.log(err)
     }
@@ -74,7 +75,7 @@ const viewEmps = function () {
 //add a department
 //enter dept name and add to database
 const addDepts = async () => {
-    try{
+    try {
         const res = await inquirer.prompt([
             {
                 type: "input",
@@ -83,12 +84,12 @@ const addDepts = async () => {
             }
         ])
 
-        db.query("INSERT INTO department (name) VALUES (\"?\");", `${res.deptName}`, (err, result) =>{
-            if(err){console.log(err)}
-            else{console.log(`New department ${res.deptName} has been added to the database`)}
+        db.query("INSERT INTO department (name) VALUES (\"?\");", `${res.deptName}`, (err, result) => {
+            if (err) { console.log(err) }
+            else { console.log(`New department ${res.deptName} has been added to the database`) }
         })
 
-    }catch(err){
+    } catch (err) {
         console.log(err)
     }
     init()
@@ -97,7 +98,7 @@ const addDepts = async () => {
 //add a role, 
 //enter role name, salary, and department
 const addRoles = async () => {
-   try{
+    try {
         const res = await inquirer.prompt([
             {
                 type: "input",
@@ -115,13 +116,13 @@ const addRoles = async () => {
                 message: "Please type the department id under which this role falls:"
             }
         ])
-        
-        db.query("INSERT INTO role (title, salary, department_id) VALUES (\"?\", ?, ?);", [`${res.title}`, `${res.salary}`, `${res.department_id}`], (err, result) =>{
-            if(err){console.log(err)}
-            else{console.log(`New role ${res.title} has been added to the database`)}
+
+        db.query("INSERT INTO role (title, salary, department_id) VALUES (\"?\", ?, ?);", [`${res.title}`, `${res.salary}`, `${res.department_id}`], (err, result) => {
+            if (err) { console.log(err) }
+            else { console.log(`New role ${res.title} has been added to the database`) }
         })
 
-    }catch(err){
+    } catch (err) {
         console.log(err)
     }
     init()
@@ -130,7 +131,7 @@ const addRoles = async () => {
 //add an employee
 //first name, last name, role, and manager
 const addEmps = async () => {
-    try{
+    try {
         const res = await inquirer.prompt([
             {
                 type: "input",
@@ -154,12 +155,12 @@ const addEmps = async () => {
             }
         ])
 
-        db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (\"?\", \"?\", ?, ?);", [`${res.first_name}`,`${res.last_name}`, `${res.role_id}`, `${res.manager_id}`], (err, result) =>{
-            if(err){console.log(err)}
-            else{console.log(`New employee ${res.first_name} ${res.last_name} has been added to the database`)}
+        db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (\"?\", \"?\", ?, ?);", [`${res.first_name}`, `${res.last_name}`, `${res.role_id}`, `${res.manager_id}`], (err, result) => {
+            if (err) { console.log(err) }
+            else { console.log(`New employee ${res.first_name} ${res.last_name} has been added to the database`) }
         })
 
-    }catch(err){
+    } catch (err) {
         console.log(err)
     }
     init()
@@ -167,5 +168,97 @@ const addEmps = async () => {
 
 //update role
 //select an employee and and update their role in the db.
+
+//function chain to avoid complex callbacks
+let finEmpArr = []
+
+const empInqBuild = () => { 
+    //sets up  employee choice array
+    db.query("SELECT first_name, last_name FROM employee", (err, sqlRes) => {
+        if (err) { console.log(err) }
+        else {
+            const resArr = Object.values(sqlRes)
+          
+            for (i = 0; i < resArr.length; i++) {
+                let valArr = Object.values(resArr[i])
+                
+                
+                let joinArr = valArr.join(" ")
+                finEmpArr.push(joinArr)
+                
+            }
+            roleInqBuild()
+        }
+    }
+    )
+   
+}
+
+let finRoleArr = []
+const roleInqBuild = async () => {
+    //sets up role and role id array
+    db.query("Select title, id FROM role", (err, sqlRes)=>{
+        if (err) { console.log(err) }
+        else{
+            const resArr = Object.values(sqlRes)
+          
+            for (i = 0; i < resArr.length; i++) {
+                let valArr = Object.values(resArr[i])
+                
+                let joinArr = valArr.join("-")
+                finRoleArr.push(joinArr)
+                
+            }
+            updateEmps()
+        }
+    })
+
+}
+
+let splName = (x) => {
+    const splitArr = x.split(" ")
+    const splicedArr = splitArr.splice(0,1)
+    const newString = splicedArr.toString()
+    return newString
+}
+
+let splRole = (x) => {
+    const splitArr = x.split("-")
+    const splicedArr = splitArr.splice(1,1)
+    const newString = splicedArr.toString()
+    return parseInt(newString)
+}
+
+const updateEmps = async () => {
+    
+    try {
+        const res = await inquirer.prompt([
+            {
+                type: "list",
+                name: "empList",
+                Message: "Please choose the employee whose role you'd like to update:",
+                choices: finEmpArr
+            },
+            {
+                type: "list",
+                name: "roleList",
+                Message: "Please choose the role you'd like to assign to your previously chosen employee:",
+                choices: finRoleArr
+            }
+        ])
+
+        db.query("UPDATE employee SET role_id= ? WHERE first_name = ?",[splRole(res.roleList), splName(res.empList)], (err) =>{
+            if(err){console.log(err)}
+            else{
+                console.log("Employee's role successfully updated")
+            }
+        })
+
+    } catch (err) {
+        console.log(err)
+    }
+    init()
+}
+
 
 init();

@@ -9,11 +9,11 @@ VALUES ("researcher", 100000.50, 1),
        ("accountant", 70000, 2);
        
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("John M", "Anager", 1, null), 
-       ("Julie D", "Boss", 2, null),
+VALUES ("Jim", "Anager", 1, null), 
+       ("Julie", "Daboss", 2, null),
        ("Todd", "Di'rector", 3, null);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Devin", "Elepor", 1, 1),
-       ("Ne", "Te-work", 2, 2),
-       ("Jerry", "From Acccounting", 3, 3);
+       ("Ne", "Ti'Work", 2, 2),
+       ("Jerry", "From-Acccounting", 3, 3);
