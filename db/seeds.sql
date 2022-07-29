@@ -1,12 +1,12 @@
-INSERT INTO department (name)
+INSERT INTO department (dept_name)
 VALUES ("Research and Dev"),
        ("Accounting"),
        ("IT");
 
 INSERT INTO role (title, salary, department_id)
 VALUES ("researcher", 100000.50, 1),
-       ("admin", 120000, 3),
-       ("accountant", 70000, 2);
+       ("accountant", 70000, 2),
+       ("admin", 120000, 3);
        
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Jim", "Anager", 1, null), 
@@ -15,5 +15,5 @@ VALUES ("Jim", "Anager", 1, null),
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Devin", "Elepor", 1, 1),
-       ("Ne", "Ti'Work", 2, 2),
-       ("Jerry", "From-Acccounting", 3, 3);
+       ("Ne", "Tewark", 3, 3),
+       ("Jerry", "From-Acccounting", 2, 2);
